@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Drifter</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_config">ConfigActivity</string>
+    <string-array name="Drifter_names">
+        <item >Drifter #1</item>
+        <item >Drifter #2</item>
+        <item >Drifter #3</item>
+        <item >Drifter #4</item>
+        <item >Drifter #5</item>
+        <item >Drifter #6</item>
+        <item >Drifter #7</item>
+        <item >Drifter #8</item>
+        <item >Drifter #9</item>
+        <item >Drifter #10</item>
+        <item >Drifter #11</item>
+        <item >Drifter #12</item>
+        <item >Drifter #13</item>
+        <item >Drifter #14</item>
+        <item >Drifter #15</item>
+        <item >Drifter #16</item>
+        <item >Drifter #17</item>
+        <item >Drifter #18</item>
+        <item >Drifter #19</item>
+        <item >Drifter #20</item>
+    </string-array>
+
+</resources>
