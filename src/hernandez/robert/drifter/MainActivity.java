@@ -8,10 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private final String TAG = "Main Activity";
+	static MainActivity me;
 	
 	//when activity is established, calls all these functions to set up activitiy
 	@Override
@@ -20,8 +22,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         setupMessageButton();
         setupConfigButton();
-        
-    }
+        setupView();
+	}
     
 	//establishes options like the config that we have
 	@Override
@@ -42,7 +44,18 @@ public class MainActivity extends Activity {
 	   			return super.onOptionsItemSelected(item);
 	   }
    }
-    
+    private void setupView(){
+    	//Get the intent that was called by configuration
+    	Intent intent = getIntent();
+    	//bind correct name
+    	String drifter_name = intent.getStringExtra("spinnerval");
+    	TextView displayname = (TextView)findViewById(R.id.driftnametext);
+    	if(drifter_name == null || drifter_name.isEmpty()){
+    		//preset value?
+    	}else{
+    		displayname.setText(""+drifter_name);    		
+    	}
+    }
    
    //**********non built in functions**********
    
@@ -55,7 +68,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(MainActivity.this, "Cheers!", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, "Turning off GPS!", Toast.LENGTH_SHORT).show();
 			}
 		});
     }
@@ -69,8 +82,8 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 	   			Log.i(TAG,"logggg");
-				Toast.makeText(MainActivity.this, "switching!", Toast.LENGTH_SHORT).show();
-				startActivity(new Intent(MainActivity.this,ConfigActivity.class));
+				Toast.makeText(MainActivity.this, "starting GPS!", Toast.LENGTH_SHORT).show();
+				//startActivity(new Intent(MainActivity.this,ConfigActivity.class));
 			}
 		});
     }

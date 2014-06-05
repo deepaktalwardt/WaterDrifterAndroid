@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="Welcome to the Water Drifter Project, I am Drifter #"
+        android:text="@string/textfor_driftname"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
@@ -21,7 +21,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="31dp"
         android:layout_marginRight="44dp"
-        android:text="Stop" />
+        android:text="@string/stop" />
 
     <Button
         android:id="@+id/configbutton"
@@ -31,16 +31,16 @@
         android:layout_alignBottom="@+id/messageButton"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="42dp"
-        android:text="Start" />
+        android:text="@string/start" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/driftnametext"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="22dp"
         android:layout_alignBottom="@+id/textView1"
-        android:layout_alignLeft="@+id/messageButton"
-        android:layout_marginLeft="16dp"
-        android:text="1"
+        android:layout_marginLeft="33dp"
+        android:layout_toRightOf="@+id/configbutton"
+        android:text="@string/Drifttextname"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

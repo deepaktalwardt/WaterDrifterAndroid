@@ -26,5 +26,14 @@
         <item >Drifter #19</item>
         <item >Drifter #20</item>
     </string-array>
+    <string name="Default_val">5000</string>
+    <string name="Namesfor_drift">Names for Drifter</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Intervals">Update intervals in miliseconds</string>
+    <string name="accept_conf">Accept Configueration</string>
+    <string name="Drifttextname">Not Yet Set</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="textfor_driftname">Welcome to the Water Drifter Project, I am </string>
 
 </resources>

@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="top"
     tools:context="${packageName}.${activityClass}" >
 
     <Button
@@ -10,27 +11,26 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Ok, Lets go!" />
+        android:text="@string/accept_conf" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/driftnametext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
         android:layout_below="@+id/textView1"
         android:layout_marginTop="23dp"
-        android:text="Update intervals in miliseconds" />
+        android:text="@string/Intervals" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/inputfor_interval"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/driftnametext"
+        android:layout_below="@+id/driftnametext"
         android:ems="10"
         android:inputType="numberSigned"
-        android:text="5000" >
-
+        android:text="@string/Default_val" >
         <requestFocus />
     </EditText>
 
@@ -42,16 +42,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="38dp"
-        android:text="Name of Drifter" />
-
-    <Spinner
-        android:id="@+id/spinnerDrifter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_marginBottom="14dp"
-        android:layout_marginLeft="14dp"
-        android:layout_toRightOf="@+id/textView1" />
+        android:text="@string/Namesfor_drift" />
 
     <Button
         android:id="@+id/cancelBtn"
@@ -60,6 +51,15 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="14dp"
-        android:text="Cancel" />
+        android:text="@string/Cancel" />
+
+    <Spinner
+        android:id="@+id/spinnerDrifter"
+        android:layout_width="145dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/driftnametext"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="19dp"
+        android:entries="@array/Drifter_names" />
 
 </RelativeLayout>
