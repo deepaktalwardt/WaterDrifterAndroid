@@ -13,3 +13,11 @@ Installing the tool to run locally is a bit cumbersome, but please do as follows
 
 
 h2. 1. Prequisites
+
+Download the google ADT (which contains the current ecpilse withe the SDK installed)
+* "Eclipse with Google":http://developer.android.com/sdk/index.html
+
+
+h2. 10 Otherlinks
+Google Plugin for Eclipse
+* "Plugin":https://developers.google.com/eclipse/
