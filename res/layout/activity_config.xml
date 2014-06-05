@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top"
-    tools:context="${packageName}.${activityClass}" >
+    tools:context="${packageName}.${activityClass}" 
+    android:background="#BBD9EE" >
 
     <Button
         android:id="@+id/btnOnConfig"
@@ -11,7 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="@string/accept_conf" />
+        android:text="@string/accept_conf"
+        android:textColor="#336699"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/driftnametext"
@@ -20,7 +23,9 @@
         android:layout_alignLeft="@+id/textView1"
         android:layout_below="@+id/textView1"
         android:layout_marginTop="23dp"
-        android:text="@string/Intervals" />
+        android:text="@string/Intervals" 
+        android:textColor="#336699"
+        android:textSize="26sp" />
 
     <EditText
         android:id="@+id/inputfor_interval"
@@ -30,7 +35,9 @@
         android:layout_below="@+id/driftnametext"
         android:ems="10"
         android:inputType="numberSigned"
-        android:text="@string/Default_val" >
+        android:text="@string/Default_val"
+        android:textColor="#336699"
+        android:textSize="26sp" >
         <requestFocus />
     </EditText>
 
@@ -42,7 +49,9 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="38dp"
-        android:text="@string/Namesfor_drift" />
+        android:text="@string/Namesfor_drift"
+        android:textColor="#336699"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/cancelBtn"
@@ -51,7 +60,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="14dp"
-        android:text="@string/Cancel" />
+        android:text="@string/Cancel"
+        android:textColor="#336699"
+        android:textSize="20sp" />
 
     <Spinner
         android:id="@+id/spinnerDrifter"

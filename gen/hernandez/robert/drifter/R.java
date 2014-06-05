@@ -16,16 +16,20 @@ public final class R {
     public static final class drawable {
         public static final int cancel=0x7f020000;
         public static final int checkmark=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int start=0x7f020003;
-        public static final int stop=0x7f020004;
+        public static final int drifter=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int start=0x7f020004;
+        public static final int stop=0x7f020005;
     }
     public static final class id {
+        public static final int TextView01=0x7f080009;
+        public static final int TextView02=0x7f08000a;
         public static final int btnOnConfig=0x7f080000;
         public static final int cancelBtn=0x7f080004;
         public static final int configbutton=0x7f080007;
-        public static final int configureMenu=0x7f080008;
+        public static final int configureMenu=0x7f08000b;
         public static final int driftnametext=0x7f080001;
+        public static final int imageView1=0x7f080008;
         public static final int inputfor_interval=0x7f080003;
         public static final int messageButton=0x7f080006;
         public static final int spinnerDrifter=0x7f080005;
@@ -50,6 +54,8 @@ public final class R {
         public static final int start=0x7f04000a;
         public static final int stop=0x7f040009;
         public static final int textfor_driftname=0x7f04000b;
+        public static final int textfor_driftname2=0x7f04000c;
+        public static final int textfor_driftname3=0x7f04000d;
         public static final int title_activity_config=0x7f040002;
     }
     public static final class style {

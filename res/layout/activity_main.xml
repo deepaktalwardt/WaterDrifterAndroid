@@ -2,16 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${packageName}.${activityClass}" >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/textfor_driftname"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    tools:context="${packageName}.${activityClass}"
+    android:background="#BBD9EE" >
 
     <Button
         android:id="@+id/messageButton"
@@ -21,7 +13,9 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="31dp"
         android:layout_marginRight="44dp"
-        android:text="@string/stop" />
+        android:text="@string/stop"  
+        android:textColor="#336699"
+        android:textSize="26sp" />
 
     <Button
         android:id="@+id/configbutton"
@@ -31,16 +25,63 @@
         android:layout_alignBottom="@+id/messageButton"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="42dp"
-        android:text="@string/start" />
+        android:text="@string/start"
+        android:textColor="#336699"
+        android:textSize="26sp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="500dp"
+        android:layout_height="110dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/drifter" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginTop="16dp"
+        android:layout_toLeftOf="@+id/messageButton"
+        android:text="@string/textfor_driftname"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff"
+        android:textSize="26sp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/TextView01"
+        android:layout_marginTop="19dp"
+        android:text="@string/textfor_driftname2"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff"
+        android:textSize="26sp" />
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/textfor_driftname3"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff"
+        android:textSize="26sp" />
 
     <TextView
         android:id="@+id/driftnametext"
         android:layout_width="wrap_content"
-        android:layout_height="22dp"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_marginLeft="33dp"
-        android:layout_toRightOf="@+id/configbutton"
+        android:layout_height="30dp"
+        android:layout_below="@+id/TextView02"
+        android:layout_marginTop="22dp"
+        android:layout_toLeftOf="@+id/messageButton"
         android:text="@string/Drifttextname"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff"
+        android:textSize="26sp" />
 
 </RelativeLayout>

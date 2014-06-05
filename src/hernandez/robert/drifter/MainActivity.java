@@ -13,16 +13,14 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private final String TAG = "Main Activity";
-	static MainActivity me;
 	
 	//when activity is established, calls all these functions to set up activitiy
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupMessageButton();
-        setupConfigButton();
-        setupView();
+        setupEndService();
+        setupService();
 	}
     
 	//establishes options like the config that we have
@@ -38,29 +36,42 @@ public class MainActivity extends Activity {
 	   switch(item.getItemId()){
 	   		case R.id.configureMenu:
 	   			Log.i(TAG,"Config menu click");
-				startActivity(new Intent(MainActivity.this,ConfigActivity.class));
+	   			Intent intent = new Intent(MainActivity.this,ConfigActivity.class);//switches the activity
+				startActivityForResult(intent,42);
 	   			return true;
 	   		default:
 	   			return super.onOptionsItemSelected(item);
 	   }
    }
-    private void setupView(){
-    	//Get the intent that was called by configuration
-    	Intent intent = getIntent();
-    	//bind correct name
-    	String drifter_name = intent.getStringExtra("spinnerval");
-    	TextView displayname = (TextView)findViewById(R.id.driftnametext);
-    	if(drifter_name == null || drifter_name.isEmpty()){
-    		//preset value?
-    	}else{
-    		displayname.setText(""+drifter_name);    		
-    	}
-    }
+    @Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.i(TAG, "onActivityResult");
+		Log.i(TAG, "requestCode is"+requestCode);
+		Log.i(TAG, "resultCode is"+resultCode);
+		if(resultCode == Activity.RESULT_CANCELED){
+			Intent intent = getIntent();
+			String drifter_name = intent.getStringExtra("spinnerval");
+			Log.i(TAG, "data is "+drifter_name);
+		}else{
+			switch(requestCode){
+			case 42:
+				//bind correct name
+				String drifter_name = data.getStringExtra("spinnerval");
+				TextView displayname = (TextView)findViewById(R.id.driftnametext);
+				displayname.setText(""+drifter_name);    		
+				
+			}			
+		}
+	}
+
    
    //**********non built in functions**********
    
+   
     //helper functions to set up buttons part 1
-    private void setupMessageButton(){
+    private void setupEndService(){
     	Button messageButton = (Button)findViewById(R.id.messageButton);
     	messageButton.setBackgroundResource(R.drawable.stop);
     	messageButton.setOnClickListener(new View.OnClickListener() {
@@ -68,12 +79,14 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(MainActivity.this, "Turning off GPS!", Toast.LENGTH_SHORT).show();
+	   			//Log.i(TAG,"ended service");
+				//Toast.makeText(MainActivity.this, "Turning off GPS!", Toast.LENGTH_SHORT).show();
+				stopService(new Intent(getBaseContext(),GeoService.class));
 			}
 		});
     }
     //part 2 button
-    private void setupConfigButton(){
+    private void setupService(){
     	Button messageButton = (Button)findViewById(R.id.configbutton);
     	messageButton.setBackgroundResource(R.drawable.start);
     	messageButton.setOnClickListener(new View.OnClickListener() {
@@ -81,9 +94,10 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-	   			Log.i(TAG,"logggg");
-				Toast.makeText(MainActivity.this, "starting GPS!", Toast.LENGTH_SHORT).show();
+	   			Log.i(TAG,"started service");
+				//Toast.makeText(MainActivity.this, "starting GPS!", Toast.LENGTH_SHORT).show();
 				//startActivity(new Intent(MainActivity.this,ConfigActivity.class));
+	   			startService(new Intent(getBaseContext(),GeoService.class));
 			}
 		});
     }

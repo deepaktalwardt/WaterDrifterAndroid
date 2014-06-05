@@ -3,6 +3,7 @@ package hernandez.robert.drifter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 public class ConfigActivity extends Activity {
+	private final String TAG = "ConfigActivity";
 	Spinner configSpinner;//variable that holds choices(choices stored in strings-inside values-)
 	Button cancelbtn;//a simple redirect button
 	Button configbtn;//a button that passes values depending on its configuration
@@ -44,13 +46,14 @@ public class ConfigActivity extends Activity {
 				// TODO replace this with values to be sent over
 				String spinnerval = configSpinner.getSelectedItem().toString();//value grabbed by this time
 				Double interval = Double.valueOf(inputval.getText().toString());//value set or changed by this time
-				Intent intent = new Intent(ConfigActivity.this,MainActivity.class);
+				Intent intent = new Intent();
 				intent.putExtra("interval_num", interval);
 				intent.putExtra("spinnerval", spinnerval);
-				
+				setResult(Activity.RESULT_OK,intent);	
+				Log.i(TAG, "data is "+spinnerval);
 				Toast.makeText(ConfigActivity.this, "Configured accepted~", Toast.LENGTH_SHORT).show();
-				startActivity(intent);
-				//finish();
+				//startActivity(intent);
+				finish();
 			}
 		});
     }
@@ -66,6 +69,8 @@ public class ConfigActivity extends Activity {
 				// TODO remove this and set a log for this
 				Toast.makeText(ConfigActivity.this, "Canceling", Toast.LENGTH_SHORT).show();
 				//startActivity(new Intent(ConfigActivity.this,ConfigActivity.class));
+				Intent intent = new Intent();
+				setResult(Activity.RESULT_CANCELED,intent);
 				finish();
 			}
 		});
