@@ -18,6 +18,6 @@ Download the google ADT (which contains the current ecpilse withe the SDK instal
 * "Eclipse with Google":http://developer.android.com/sdk/index.html
 
 
-h2. 10 Otherlinks
+h2. 10. Otherlinks
 Google Plugin for Eclipse
 * "Plugin":https://developers.google.com/eclipse/
