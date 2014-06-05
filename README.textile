@@ -7,7 +7,7 @@ h1. Useful links
 h2. Resource page of our previous work:
 * "Drifters":http://float.berkeley.edu/drifters
 
-h1. Install Android app locally?
+h1. Install Android app locally
 
 Installing the tool to run locally is a bit cumbersome, but please do as follows.
 
