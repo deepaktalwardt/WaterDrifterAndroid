@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 public class GeoService extends Service {
 	//Setting up Locationservice
-	LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-	LocationListener ll = new myLocationListener();
+	//LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+	//LocationListener ll = new myLocationListener();
 
 	@Override
 	public void onDestroy() {
