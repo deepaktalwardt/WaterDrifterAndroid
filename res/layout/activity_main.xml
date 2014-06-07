@@ -84,4 +84,24 @@
         android:textColor="#ffffff"
         android:textSize="26sp" />
 
+    <TextView
+        android:id="@+id/lattext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/configbutton"
+        android:layout_alignLeft="@+id/configbutton"
+        android:layout_marginBottom="27dp"
+        android:text="lat"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/longtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lattext"
+        android:layout_alignBottom="@+id/lattext"
+        android:layout_alignRight="@+id/messageButton"
+        android:text="long"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
 </RelativeLayout>

@@ -16,8 +16,94 @@ h2. 1. Prequisites
 
 Download the google ADT (which contains the current ecpilse withe the SDK installed)
 * "Eclipse with Google":http://developer.android.com/sdk/index.html
+* You must also have any android phone that runs ice cream sandwich or better (2.3 or higher)
+
+h2. 2. Install the Tool
+
+To get a new repostory on your local computer:
+
+* Starting from Desktop, mkdir "drifter" on your terminal
+* cd "drifter"
+* git clone git@github.com:luckyx1/visualization_for_drifter.git
+* now you have everything!
+
+h2. 2 1/2. Running android for the first time
+
+*Connect the phone to the computer via usb, and make sure that your phone is in developer mode.
+*Open Eclipse and import the project from the drifter folder
+*Click run as: select your phone from the current list
+*if no compolization errors, your set, and can test locally
+
+h2. 3. Daily Android Use 
+
+To check if new updates has happened (while you have created no new content)
+* git pull
+
+To check if new updates has happpened(while you have created content) 
+* git add -A //Only do this if you are working on a branch
+* git commit -m "what you were working on"
+* git pull
+* -fix any merge conflicts
+
+How to push your changes
+* git add "file_name"
+* git commit -m "what you were working on"
+* git pull 
+* -fix any merge conflicts
+* git push
+
+To create a branch
+* git checkout -b branch_name
+
+To push this branch to github
+* git push origin branch_name
+
+To switch to branch
+* git checkout branch_name
+
+To switch to master
+* git checkout master
+
+To update branch
+* git pull master branch
+
+To update master with branch
+* git merge branch master
+
+h2. 4. Android Files and explaination
+
+Currentlyt there are two Activitys and One service
+
+A service is defined as an action that the android phone does on the background.
+An Activity on the other hand is a splash page where the user can interact with it via buttons or swipe.
+
+Main Activity:
+*controls whether to start or stop the service, and go to Config Activity
+
+Congfig Activity:
+*allows to modify values before sending to the service
+
+GeoService:
+*collects data via GPS and send it to Google Computer Engine
 
 
-h2. 10. Otherlinks
+h2. 6. Otherlinks
 Google Plugin for Eclipse
 * "Plugin":https://developers.google.com/eclipse/
+
+h1. 7. Maintainers
+
+This is a list of the team as of 06/05/2014. If you have committed to this project, please add your name and contact to the list.
+
+h2. Drift team~
+
+*Robert Erick Hernandez Jr.* <r.hernandez@berkeley.edu>
+*Deepak* <r.hernandez@berkeley.edu>
+*Nicolas Plain* <r.hernandez@berkeley.edu>
+
+h2. Written by (last update June 5, 2014) 
+*Robert Erick Hernandez Jr*
+
+
+Enjoy,
+The WaterDrifter Team~
