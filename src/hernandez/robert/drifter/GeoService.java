@@ -20,8 +20,8 @@ public class GeoService extends Service {
 	private static final float LOCATION_DISTANCE = 0;  //TODO: 20f; what default should this be?
 
 	LocationListener[] mLocationListeners = new LocationListener[] {
-	        new myLocationListener(LocationManager.GPS_PROVIDER),
-	        new myLocationListener(LocationManager.NETWORK_PROVIDER)
+	        new myLocationListener(LocationManager.GPS_PROVIDER,this),
+	        new myLocationListener(LocationManager.NETWORK_PROVIDER,this)
 	};
 	
 	@Override
@@ -78,9 +78,14 @@ public class GeoService extends Service {
 	class myLocationListener implements LocationListener{
 		private static final String TAG = "myListenerInGeoService";
 		Location lastloc;
-	    public myLocationListener(String provider){
+		
+		Context context;  //<< declare context here
+
+	    public myLocationListener(String provider, Context context){
 	        Log.d(TAG, "LocationListener " + provider);
 	        lastloc = new Location(provider);
+			  this.context=context;
+
 	    }
 		@Override
 		public void onLocationChanged(Location location) {
@@ -89,6 +94,11 @@ public class GeoService extends Service {
 			if(lastloc != null){
 				double pLong = lastloc.getLongitude();
 				double pLat = lastloc.getLatitude();
+				//String latLongString = "Lat:" + location.getLatitude() + "\nLong:" + location.getLongitude();
+	            Intent intent= new Intent("gpsdata");
+	            intent.putExtra("lat", pLat);//putIntegerArrayListExtra("lat", (ArrayList<Integer>) lat);
+	            intent.putExtra("long", pLong);//putIntegerArrayListExtra("lon", (ArrayList<Integer>) lon);
+	            context.sendBroadcast(intent); 
 				
 			}
 			

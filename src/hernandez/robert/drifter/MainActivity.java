@@ -1,7 +1,10 @@
 package hernandez.robert.drifter;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +16,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private final String TAG = "Main Activity";
+    private BroadcastReceiver gpsreceiver;
+
 	
 	//when activity is established, calls all these functions to set up activitiy
 	@Override
@@ -21,8 +26,29 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         setupEndService();
         setupService();
+        setupRecieveVal();
 	}
     
+	private void setupRecieveVal() {
+		// TODO Auto-generated method stub
+		IntentFilter intentFilter=new IntentFilter("gpsdata");
+        gpsreceiver=new BroadcastReceiver()
+        {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+	   			Log.i(TAG,"Recieiving values");
+				TextView textlat = (TextView)findViewById(R.id.lattext);
+				TextView textlong = (TextView)findViewById(R.id.longtext);
+				Double glong = intent.getDoubleExtra("lat", 0);
+				Double lat = intent.getDoubleExtra("long", 0);
+				textlat.setText(""+lat);  
+				textlong.setText(""+glong); 
+			}
+        };
+        this.registerReceiver(gpsreceiver, intentFilter);
+		
+	}
+
 	//establishes options like the config that we have
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){

@@ -35,6 +35,7 @@
         android:layout_height="110dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:contentDescription="Main Photo for Drifter"
         android:src="@drawable/drifter" />
 
     <TextView
@@ -101,7 +102,7 @@
         android:layout_alignBaseline="@+id/lattext"
         android:layout_alignBottom="@+id/lattext"
         android:layout_alignRight="@+id/messageButton"
-        android:text="long"
+        android:text="longatude"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
