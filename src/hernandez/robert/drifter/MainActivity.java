@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
         setupEndService();
         setupService();
         setupRecieveVal();
+		Log.d(TAG,"Main activity finish creating");
 	}
     
 	private void setupRecieveVal() {
@@ -36,11 +37,13 @@ public class MainActivity extends Activity {
         {
 			@Override
 			public void onReceive(Context context, Intent intent) {
-	   			Log.i(TAG,"Recieiving values");
+	   			Log.d(TAG,"Recieiving values");
 				TextView textlat = (TextView)findViewById(R.id.lattext);
 				TextView textlong = (TextView)findViewById(R.id.longtext);
 				Double glong = intent.getDoubleExtra("lat", 0);
 				Double lat = intent.getDoubleExtra("long", 0);
+				Log.d(TAG,"glong is ="+glong);
+				Log.d(TAG,"glat is =g"+lat);
 				textlat.setText(""+lat);  
 				textlong.setText(""+glong); 
 			}
@@ -61,7 +64,7 @@ public class MainActivity extends Activity {
    public boolean onOptionsItemSelected(MenuItem item){
 	   switch(item.getItemId()){
 	   		case R.id.configureMenu:
-	   			Log.i(TAG,"Config menu click");
+	   			Log.d(TAG,"Config menu click");
 	   			Intent intent = new Intent(MainActivity.this,ConfigActivity.class);//switches the activity
 				startActivityForResult(intent,42);
 	   			return true;
@@ -73,13 +76,13 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.i(TAG, "onActivityResult");
-		Log.i(TAG, "requestCode is"+requestCode);
-		Log.i(TAG, "resultCode is"+resultCode);
+		Log.d(TAG, "onActivityResult");
+		Log.d(TAG, "requestCode is"+requestCode);
+		Log.d(TAG, "resultCode is"+resultCode);
 		if(resultCode == Activity.RESULT_CANCELED){
 			Intent intent = getIntent();
 			String drifter_name = intent.getStringExtra("spinnerval");
-			Log.i(TAG, "data is "+drifter_name);
+			Log.d(TAG, "data is "+drifter_name);
 		}else{
 			switch(requestCode){
 			case 42:
@@ -106,6 +109,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 	   			//Log.i(TAG,"ended service");
+	   			Log.d(TAG,"ended service");
 				//Toast.makeText(MainActivity.this, "Turning off GPS!", Toast.LENGTH_SHORT).show();
 				stopService(new Intent(getBaseContext(),GeoService.class));
 			}
@@ -120,7 +124,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-	   			Log.i(TAG,"started service");
+	   			Log.d(TAG,"started service");
 				//Toast.makeText(MainActivity.this, "starting GPS!", Toast.LENGTH_SHORT).show();
 				//startActivity(new Intent(MainActivity.this,ConfigActivity.class));
 	   			startService(new Intent(getBaseContext(),GeoService.class));
