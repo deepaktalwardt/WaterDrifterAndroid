@@ -17,6 +17,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 	private final String TAG = "Main Activity";
     private BroadcastReceiver gpsreceiver;
+    private String driftername;
 
 	
 	//when activity is established, calls all these functions to set up activitiy
@@ -42,10 +43,15 @@ public class MainActivity extends Activity {
 				TextView textlong = (TextView)findViewById(R.id.longtext);
 				Double glong = intent.getDoubleExtra("lat", 0);
 				Double lat = intent.getDoubleExtra("long", 0);
+				int status = intent.getIntExtra("status", 0);
 				Log.d(TAG,"glong is ="+glong);
 				Log.d(TAG,"glat is =g"+lat);
 				textlat.setText(""+lat);  
-				textlong.setText(""+glong); 
+				textlong.setText(""+glong);
+				Toast.makeText(MainActivity.this, "status is this"+status, Toast.LENGTH_SHORT).show();
+				if(status==1){
+					Toast.makeText(MainActivity.this, "sent to DB~", Toast.LENGTH_SHORT).show();
+				}
 			}
         };
         this.registerReceiver(gpsreceiver, intentFilter);
@@ -81,8 +87,8 @@ public class MainActivity extends Activity {
 		Log.d(TAG, "resultCode is"+resultCode);
 		if(resultCode == Activity.RESULT_CANCELED){
 			Intent intent = getIntent();
-			String drifter_name = intent.getStringExtra("spinnerval");
-			Log.d(TAG, "data is "+drifter_name);
+			driftername = intent.getStringExtra("spinnerval");
+			Log.d(TAG, "data is "+driftername);
 		}else{
 			switch(requestCode){
 			case 42:
@@ -127,7 +133,9 @@ public class MainActivity extends Activity {
 	   			Log.d(TAG,"started service");
 				//Toast.makeText(MainActivity.this, "starting GPS!", Toast.LENGTH_SHORT).show();
 				//startActivity(new Intent(MainActivity.this,ConfigActivity.class));
-	   			startService(new Intent(getBaseContext(),GeoService.class));
+				Intent intent = new Intent(getBaseContext(),GeoService.class);
+				intent.putExtra("dname", driftername);
+	   			startService(intent);
 			}
 		});
     }
