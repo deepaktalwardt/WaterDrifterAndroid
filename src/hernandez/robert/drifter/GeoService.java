@@ -44,7 +44,6 @@ public class GeoService extends Service {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		Toast.makeText(this, "service ended", Toast.LENGTH_SHORT).show();
-		lm=null;
 	}
 	
 	@Override
@@ -89,8 +88,8 @@ public class GeoService extends Service {
 		        new myLocationListener(LocationManager.GPS_PROVIDER,this,driftername),
 		        new myLocationListener(LocationManager.NETWORK_PROVIDER,this,driftername)
 		};
-		Toast.makeText(this, "service initiated", Toast.LENGTH_SHORT).show();
-		gpadata();
+	    gpadata();
+	    Toast.makeText(this, "service initiated"+driftername, Toast.LENGTH_SHORT).show();
 		return START_STICKY;
 	}
 
