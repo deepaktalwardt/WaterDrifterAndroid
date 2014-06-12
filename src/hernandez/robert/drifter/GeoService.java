@@ -1,10 +1,12 @@
 package hernandez.robert.drifter;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -15,6 +17,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import android.app.Service;
 import android.content.Context;
@@ -22,6 +25,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.format.Time;
@@ -99,6 +103,39 @@ public class GeoService extends Service {
 		return null;
 	}
 }
+ class Connection extends AsyncTask<ArrayList<NameValuePair>, Void, Void>{
+
+    protected Void doInBackground(ArrayList<NameValuePair>... nameValuePairs){
+        // get zero index of nameValuePairs and use that to post
+        ArrayList<NameValuePair> nvPairs = nameValuePairs[0];
+
+        try{
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://drifter-visualization.herokuapp.com/data");
+            httppost.setEntity(new UrlEncodedFormEntity(nvPairs));
+
+         // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+            Log.d("postData", nameValuePairs[0].toString());
+
+            Log.i("postData", response.getStatusLine().toString());
+        } catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        finally{}
+		return null;
+
+    }
+
+}
+
 	class myLocationListener implements LocationListener{
 		private static final String TAG = "myListenerInGeoService";
 		Location lastloc;
@@ -124,7 +161,7 @@ public class GeoService extends Service {
 	            Intent intent= new Intent("gpsdata");
 	            intent.putExtra("lat", pLat);//putIntegerArrayListExtra("lat", (ArrayList<Integer>) lat);
 	            intent.putExtra("long", pLong);//putIntegerArrayListExtra("lon", (ArrayList<Integer>) lon);
-	            int status = postData(pLat,pLong);
+	            String status = postData(pLat,pLong);
 	            intent.putExtra("status",status);
 	            context.sendBroadcast(intent); 
 			}
@@ -145,35 +182,41 @@ public class GeoService extends Service {
 	        Log.d(TAG, "onProviderDisabled: " + provider);            		
 		}
 		//adding the post data to Ruby
-		public int postData(Double lat, Double lon) {
+		public String postData(Double lat, Double lon) {
 		    // Create a new HttpClient and Post Header
-		    HttpClient httpclient = new DefaultHttpClient();
-		    HttpPost httppost = new HttpPost("http://0.0.0.0:3000/data");
-		    int status=0;
+		    //HttpClient httpclient = new DefaultHttpClient();
+		    //HttpPost httppost = new HttpPost("http://0.0.0.0:3000/data");
+		    String status="";
 		    try {
 		        // Add your data
-		        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(6);
+		    	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(6);
 		        nameValuePairs.add(new BasicNameValuePair("latitude", lat.toString()));
+		        //status += " lat= "+lat.toString();
 		        nameValuePairs.add(new BasicNameValuePair("longitude", lon.toString()));
+		        //status += " long= "+lon.toString();
 		        Time now = new Time();
 		        now.setToNow();
 		        String time = now.toString();
+		        //status += " time= "+time;
+		        System.out.println(time);
 		        nameValuePairs.add(new BasicNameValuePair("time", time));
 		        nameValuePairs.add(new BasicNameValuePair("valid_input", "true"));
+		        //status += " valid= "+ true;
 		        nameValuePairs.add(new BasicNameValuePair("drifter_name", this.Driftername));
+		        //status += " name= "+ this.Driftername;
 		        nameValuePairs.add(new BasicNameValuePair("gps_speed", "2.5"));
-		        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
+		        status += " speed= "+ "2.5";
+		        //httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		        // Execute HTTP Post Request
-		        HttpResponse response = httpclient.execute(httppost);
-		       	status = response.getStatusLine().getStatusCode();
+		        status += "and before http post";
+		        //HttpResponse response = httpclient.execute(httppost);
+		        new Connection().doInBackground(nameValuePairs);
+		       	status += "done & responseval";
+		    }finally{}
 		        
 
-		    } catch (ClientProtocolException e) {
-		        // TODO Auto-generated catch block
-		    } catch (IOException e) {
-		        // TODO Auto-generated catch block
-		    }
+		  
+		    
 		    return status;
 		} 
 		

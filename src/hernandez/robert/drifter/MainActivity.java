@@ -48,13 +48,13 @@ public class MainActivity extends Activity {
 				TextView textlong = (TextView)findViewById(R.id.longtext);
 				Double glong = intent.getDoubleExtra("lat", 0);
 				Double lat = intent.getDoubleExtra("long", 0);
-				int status = intent.getIntExtra("status", 0);
+				String status = intent.getStringExtra("status");
 				Log.d(TAG,"glong is ="+glong);
 				Log.d(TAG,"glat is =g"+lat);
 				textlat.setText(""+lat);  
 				textlong.setText(""+glong);
-				Toast.makeText(MainActivity.this, "status is this"+status, Toast.LENGTH_SHORT).show();
-				if(status==1){
+				Toast.makeText(MainActivity.this, "status is this"+status, Toast.LENGTH_LONG).show();
+				if(status==""){
 					Toast.makeText(MainActivity.this, "sent to DB~", Toast.LENGTH_SHORT).show();
 				}
 			}
@@ -98,9 +98,9 @@ public class MainActivity extends Activity {
 			switch(requestCode){
 			case 42:
 				//bind correct name
-				String drifter_name = data.getStringExtra("spinnerval");
+				driftername = data.getStringExtra("spinnerval");
 				TextView displayname = (TextView)findViewById(R.id.driftnametext);
-				displayname.setText(""+drifter_name);    		
+				displayname.setText(""+driftername);    		
 				
 			}			
 		}
