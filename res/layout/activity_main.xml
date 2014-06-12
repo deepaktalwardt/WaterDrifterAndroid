@@ -13,7 +13,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="31dp"
         android:layout_marginRight="44dp"
-        android:text="@string/stop"  
         android:textColor="#336699"
         android:textSize="26sp" />
 
@@ -25,7 +24,6 @@
         android:layout_alignBottom="@+id/messageButton"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="42dp"
-        android:text="@string/start"
         android:textColor="#336699"
         android:textSize="26sp" />
 

@@ -161,7 +161,7 @@ public class GeoService extends Service {
 	            Intent intent= new Intent("gpsdata");
 	            intent.putExtra("lat", pLat);//putIntegerArrayListExtra("lat", (ArrayList<Integer>) lat);
 	            intent.putExtra("long", pLong);//putIntegerArrayListExtra("lon", (ArrayList<Integer>) lon);
-	            String status = postData(pLat,pLong);
+	            String status = postData(location);
 	            intent.putExtra("status",status);
 	            context.sendBroadcast(intent); 
 			}
@@ -182,7 +182,7 @@ public class GeoService extends Service {
 	        Log.d(TAG, "onProviderDisabled: " + provider);            		
 		}
 		//adding the post data to Ruby
-		public String postData(Double lat, Double lon) {
+		public String postData(Location loc) {
 		    // Create a new HttpClient and Post Header
 		    //HttpClient httpclient = new DefaultHttpClient();
 		    //HttpPost httppost = new HttpPost("http://0.0.0.0:3000/data");
@@ -190,12 +190,13 @@ public class GeoService extends Service {
 		    try {
 		        // Add your data
 		    	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(6);
-		        nameValuePairs.add(new BasicNameValuePair("latitude", lat.toString()));
+		        nameValuePairs.add(new BasicNameValuePair("latitude", loc.getLatitude()+""));
 		        //status += " lat= "+lat.toString();
-		        nameValuePairs.add(new BasicNameValuePair("longitude", lon.toString()));
+		        nameValuePairs.add(new BasicNameValuePair("longitude", loc.getLongitude()+""));
 		        //status += " long= "+lon.toString();
 		        Time now = new Time();
 		        now.setToNow();
+		        now.format2445();
 		        String time = now.toString();
 		        //status += " time= "+time;
 		        System.out.println(time);
@@ -203,15 +204,15 @@ public class GeoService extends Service {
 		        nameValuePairs.add(new BasicNameValuePair("valid_input", "true"));
 		        //status += " valid= "+ true;
 		        nameValuePairs.add(new BasicNameValuePair("drifter_name", this.Driftername));
-		        //status += " name= "+ this.Driftername;
-		        nameValuePairs.add(new BasicNameValuePair("gps_speed", "2.5"));
-		        status += " speed= "+ "2.5";
+		        status += " name= "+ this.Driftername;
+		        nameValuePairs.add(new BasicNameValuePair("gps_speed", loc.getSpeed()+""));
+		        status += " speed= "+ loc.getSpeed()+" ";
 		        //httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		        // Execute HTTP Post Request
-		        status += "and before http post";
+		        //status += "and before http post";
 		        //HttpResponse response = httpclient.execute(httppost);
 		        new Connection().doInBackground(nameValuePairs);
-		       	status += "done & responseval";
+		       	status += "post sent!";
 		    }finally{}
 		        
 

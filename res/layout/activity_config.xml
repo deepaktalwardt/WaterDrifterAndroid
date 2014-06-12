@@ -6,16 +6,6 @@
     tools:context="${packageName}.${activityClass}" 
     android:background="#BBD9EE" >
 
-    <Button
-        android:id="@+id/btnOnConfig"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/accept_conf"
-        android:textColor="#336699"
-        android:textSize="20sp" />
-
     <TextView
         android:id="@+id/driftnametext"
         android:layout_width="wrap_content"
@@ -53,17 +43,6 @@
         android:textColor="#336699"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/cancelBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="14dp"
-        android:text="@string/Cancel"
-        android:textColor="#336699"
-        android:textSize="20sp" />
-
     <Spinner
         android:id="@+id/spinnerDrifter"
         android:layout_width="145dp"
@@ -72,5 +51,26 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="19dp"
         android:entries="@array/Drifter_names" />
+
+    <Button
+        android:id="@+id/btnOnConfig"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/spinnerDrifter"
+        android:layout_marginBottom="51dp"
+        android:layout_marginRight="19dp"
+        android:textColor="#336699"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/cancelBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnOnConfig"
+        android:layout_alignBottom="@+id/btnOnConfig"
+        android:layout_alignLeft="@+id/inputfor_interval"
+        android:textColor="#336699"
+        android:textSize="20sp" />
 
 </RelativeLayout>
