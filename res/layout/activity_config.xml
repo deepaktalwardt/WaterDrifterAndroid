@@ -56,10 +56,10 @@
         android:id="@+id/btnOnConfig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/inputfor_interval"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/spinnerDrifter"
-        android:layout_marginBottom="51dp"
-        android:layout_marginRight="19dp"
+        android:layout_marginBottom="42dp"
+        android:layout_marginLeft="20dp"
         android:textColor="#336699"
         android:textSize="20sp" />
 
@@ -69,7 +69,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btnOnConfig"
         android:layout_alignBottom="@+id/btnOnConfig"
-        android:layout_alignLeft="@+id/inputfor_interval"
+        android:layout_alignRight="@+id/spinnerDrifter"
+        android:layout_marginRight="17dp"
         android:textColor="#336699"
         android:textSize="20sp" />
 

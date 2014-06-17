@@ -22,20 +22,21 @@ public final class R {
         public static final int stop=0x7f020005;
     }
     public static final class id {
-        public static final int TextView01=0x7f080009;
+        public static final int TextView01=0x7f080008;
         public static final int TextView02=0x7f08000a;
-        public static final int btnOnConfig=0x7f080000;
-        public static final int cancelBtn=0x7f080004;
+        public static final int btnOnConfig=0x7f080004;
+        public static final int cancelBtn=0x7f080005;
         public static final int configbutton=0x7f080007;
-        public static final int configureMenu=0x7f08000d;
-        public static final int driftnametext=0x7f080001;
-        public static final int imageView1=0x7f080008;
-        public static final int inputfor_interval=0x7f080003;
-        public static final int lattext=0x7f08000b;
+        public static final int configureMenu=0x7f08000e;
+        public static final int driftnametext=0x7f080000;
+        public static final int imageView1=0x7f080009;
+        public static final int inputfor_interval=0x7f080002;
+        public static final int lattext=0x7f08000d;
         public static final int longtext=0x7f08000c;
         public static final int messageButton=0x7f080006;
-        public static final int spinnerDrifter=0x7f080005;
-        public static final int textView1=0x7f080002;
+        public static final int spinnerDrifter=0x7f080003;
+        public static final int textView1=0x7f080001;
+        public static final int textView2=0x7f08000b;
     }
     public static final class layout {
         public static final int activity_config=0x7f030000;

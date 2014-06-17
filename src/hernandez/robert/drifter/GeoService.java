@@ -57,10 +57,10 @@ public class GeoService extends Service {
 	    setupLocManager();
 	}
 	
-	private void gpadata(){
+	private void gpadata(int interval){
 		try {
 	        lm.requestLocationUpdates(
-	                LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+	                LocationManager.NETWORK_PROVIDER, interval, LOCATION_DISTANCE,
 	                mLocationListeners[0]);
 	    } catch (java.lang.SecurityException ex) {
 	        Log.i(TAG, "fail to request location update, ignore", ex);
@@ -88,12 +88,13 @@ public class GeoService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 	    Log.d(TAG, "onStartCommand");
 	    driftername = intent.getStringExtra("dname");
+	    int temp_internval = intent.getIntExtra("internval", LOCATION_INTERVAL);
 	    this.mLocationListeners = new LocationListener[] {
 		        new myLocationListener(LocationManager.GPS_PROVIDER,this,driftername),
 		        new myLocationListener(LocationManager.NETWORK_PROVIDER,this,driftername)
 		};
-	    gpadata();
-	    Toast.makeText(this, "service initiated"+driftername, Toast.LENGTH_SHORT).show();
+	    gpadata(temp_internval);
+	    Toast.makeText(this, "service initiated"+driftername+"interval is"+temp_internval, Toast.LENGTH_SHORT).show();
 		return START_STICKY;
 	}
 

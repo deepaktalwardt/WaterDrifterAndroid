@@ -19,6 +19,7 @@ public class MainActivity extends Activity {
 	private final String TAG = "Main Activity";
     private BroadcastReceiver gpsreceiver;
     private String driftername;
+    private Double interval_val;
 
 	
 	//when activity is established, calls all these functions to set up activitiy
@@ -53,10 +54,10 @@ public class MainActivity extends Activity {
 				Log.d(TAG,"glat is =g"+lat);
 				textlat.setText(""+lat);  
 				textlong.setText(""+glong);
-				Toast.makeText(MainActivity.this, "status is this"+status, Toast.LENGTH_LONG).show();
-				if(status==""){
-					Toast.makeText(MainActivity.this, "sent to DB~", Toast.LENGTH_SHORT).show();
-				}
+				//Toast.makeText(MainActivity.this, "status is this"+status, Toast.LENGTH_LONG).show();
+				//if(status==""){
+				Toast.makeText(MainActivity.this, "sent to DB~", Toast.LENGTH_SHORT).show();
+				//	}
 			}
         };
         this.registerReceiver(gpsreceiver, intentFilter);
@@ -93,6 +94,7 @@ public class MainActivity extends Activity {
 		if(resultCode == Activity.RESULT_CANCELED){
 			Intent intent = getIntent();
 			driftername = intent.getStringExtra("spinnerval");
+			interval_val = intent.getDoubleExtra("interval_num", 5000);
 			Log.d(TAG, "data is "+driftername);
 		}else{
 			switch(requestCode){
@@ -141,6 +143,7 @@ public class MainActivity extends Activity {
 				//startActivity(new Intent(MainActivity.this,ConfigActivity.class));
 				Intent intent = new Intent(getBaseContext(),GeoService.class);
 				intent.putExtra("dname", driftername);
+				intent.putExtra("interval", interval_val);
 	   			startService(intent);
 			}
 		});
