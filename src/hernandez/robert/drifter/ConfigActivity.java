@@ -45,7 +45,6 @@ public class ConfigActivity extends Activity {
 			public void onClick(View v) {
 				// TODO replace this with values to be sent over
 				String spinnerval = configSpinner.getSelectedItem().toString();//value grabbed by this time
-				//int interval =   //value set or changed by this time
 				int interval = Integer.parseInt(inputval.getText().toString());
 				Intent intent = new Intent();
 				intent.putExtra("interval_num", interval);

@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
 	private final String TAG = "Main Activity";
     private BroadcastReceiver gpsreceiver;
     private String driftername;
-    private Double interval_val;
+    private Integer interval_val;
 
 	
 	//when activity is established, calls all these functions to set up activitiy
@@ -64,20 +64,21 @@ public class MainActivity extends Activity {
 		
 	}
 
-	//establishes options like the config that we have
+	//establishes options like the configuration that we have
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		getMenuInflater().inflate(R.menu.main_menu, menu);
 		return true;
 	}
    
-   //allows for the config buttons to do something when clicked
+   //allows for the configuration buttons to do something when clicked
    @Override
    public boolean onOptionsItemSelected(MenuItem item){
 	   switch(item.getItemId()){
 	   		case R.id.configureMenu:
 	   			Log.d(TAG,"Config menu click");
-	   			Intent intent = new Intent(MainActivity.this,ConfigActivity.class);//switches the activity
+	   			Intent intent = new Intent(MainActivity.this,ConfigActivity.class);
+	   			//switches the activity
 				startActivityForResult(intent,42);
 	   			return true;
 	   		default:
@@ -94,17 +95,17 @@ public class MainActivity extends Activity {
 		if(resultCode == Activity.RESULT_CANCELED){
 			Intent intent = getIntent();
 			driftername = intent.getStringExtra("spinnerval");
-			interval_val = intent.getDoubleExtra("interval_num", 5000);
+			interval_val = intent.getIntExtra("interval_num", 5000);
 			Log.d(TAG, "data is "+driftername);
 		}else{
 			switch(requestCode){
-			case 42:
-				//bind correct name
-				driftername = data.getStringExtra("spinnerval");
-				TextView displayname = (TextView)findViewById(R.id.driftnametext);
-				displayname.setText(""+driftername);    		
-				
-			}			
+				case 42:
+					//bind correct name
+					driftername = data.getStringExtra("spinnerval");
+					interval_val = data.getIntExtra("interval_num",5000);
+					TextView displayname = (TextView)findViewById(R.id.driftnametext);
+					displayname.setText(""+driftername);    			
+				}			
 		}
 	}
 
@@ -112,7 +113,7 @@ public class MainActivity extends Activity {
    //**********non built in functions**********
    
    
-    //helper functions to set up buttons part 1
+    //helper functions to set up cancel button
     private void setupEndService(){
     	Button messageButton = (Button)findViewById(R.id.messageButton);
     	messageButton.setBackgroundResource(R.drawable.stop);
@@ -121,11 +122,12 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-	   			//Log.i(TAG,"ended service");
 	   			Log.d(TAG,"ended service");
 				//Toast.makeText(MainActivity.this, "Turning off GPS!", Toast.LENGTH_SHORT).show();
-				stopService(new Intent(getBaseContext(),GeoService.class));
+	   			//do a try catch to prevent the crash
+   				stopService(new Intent(getBaseContext(),GeoService.class));
 				unregisterReceiver(gpsreceiver);
+	   			
 			}
 		});
     }
@@ -143,6 +145,7 @@ public class MainActivity extends Activity {
 				//startActivity(new Intent(MainActivity.this,ConfigActivity.class));
 				Intent intent = new Intent(getBaseContext(),GeoService.class);
 				intent.putExtra("dname", driftername);
+				Toast.makeText(MainActivity.this, "this is interval"+interval_val, Toast.LENGTH_SHORT).show();
 				intent.putExtra("interval", interval_val);
 	   			startService(intent);
 			}

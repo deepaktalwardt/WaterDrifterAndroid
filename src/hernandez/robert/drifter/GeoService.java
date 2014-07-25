@@ -35,12 +35,12 @@ import android.widget.Toast;
 
 public class GeoService extends Service {
 	private static final String TAG = "GeoService";
-	//Setting up Locationservice
+	//Setting up Location service
 	private LocationManager lm = null;
-	private static final int LOCATION_INTERVAL = 5000;
+	private static final int LOCATION_INTERVAL = 5000; //Default time
 	private static final float LOCATION_DISTANCE = 0;  //TODO: 20f; what default should this be?
 	String driftername;
-
+	Integer interval;
 	LocationListener[] mLocationListeners;
 	
 	@Override
@@ -88,13 +88,13 @@ public class GeoService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 	    Log.d(TAG, "onStartCommand");
 	    driftername = intent.getStringExtra("dname");
-	    int temp_internval = intent.getIntExtra("internval", LOCATION_INTERVAL);
+	    interval = intent.getIntExtra("interval", LOCATION_INTERVAL);
 	    this.mLocationListeners = new LocationListener[] {
 		        new myLocationListener(LocationManager.GPS_PROVIDER,this,driftername),
 		        new myLocationListener(LocationManager.NETWORK_PROVIDER,this,driftername)
 		};
-	    gpadata(temp_internval);
-	    Toast.makeText(this, "service initiated"+driftername+"interval is"+temp_internval, Toast.LENGTH_SHORT).show();
+	    gpadata(interval);
+	    Toast.makeText(this, "service initiated"+driftername+"interval is"+interval, Toast.LENGTH_SHORT).show();
 		return START_STICKY;
 	}
 
