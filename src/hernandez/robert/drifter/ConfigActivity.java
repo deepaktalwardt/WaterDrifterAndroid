@@ -43,16 +43,14 @@ public class ConfigActivity extends Activity {
 	
 			@Override
 			public void onClick(View v) {
-				// TODO replace this with values to be sent over
-				String spinnerval = configSpinner.getSelectedItem().toString();//value grabbed by this time
+				Log.d(TAG,"clicked config confirm");
+				String spinnerval = configSpinner.getSelectedItem().toString();
 				int interval = Integer.parseInt(inputval.getText().toString());
 				Intent intent = new Intent();
 				intent.putExtra("interval_num", interval);
 				intent.putExtra("spinnerval", spinnerval);
 				setResult(Activity.RESULT_OK,intent);	
-				Log.i(TAG, "data is "+spinnerval);
 				Toast.makeText(ConfigActivity.this, "Configured accepted~", Toast.LENGTH_SHORT).show();
-				//startActivity(intent);
 				finish();
 			}
 		});

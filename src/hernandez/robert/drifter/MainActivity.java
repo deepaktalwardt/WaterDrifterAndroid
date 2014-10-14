@@ -16,17 +16,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	private final String TAG = "Main Activity";
+	private final String TAG = "MainActivity";
     private BroadcastReceiver gpsreceiver;
     private String driftername;
     private Integer interval_val;
+    private TextView textlat;
+    private TextView textlong;
+    private TextView displayname;
+
 
 	
-	//when activity is established, calls all these functions to set up activitiy
+	//when activity is established, calls all these functions to set up activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textlat = (TextView)findViewById(R.id.lattext);
+		textlong = (TextView)findViewById(R.id.longtext);
+		displayname = (TextView)findViewById(R.id.driftnametext);
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -37,32 +44,6 @@ public class MainActivity extends Activity {
 		Log.d(TAG,"Main activity finish creating");
 	}
     
-	private void setupRecieveVal() {
-		// TODO Auto-generated method stub
-		IntentFilter intentFilter=new IntentFilter("gpsdata");
-        gpsreceiver=new BroadcastReceiver()
-        {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-	   			Log.d(TAG,"Recieiving values");
-				TextView textlat = (TextView)findViewById(R.id.lattext);
-				TextView textlong = (TextView)findViewById(R.id.longtext);
-				Double glong = intent.getDoubleExtra("lat", 0);
-				Double lat = intent.getDoubleExtra("long", 0);
-				String status = intent.getStringExtra("status");
-				Log.d(TAG,"glong is ="+glong);
-				Log.d(TAG,"glat is =g"+lat);
-				textlat.setText(""+lat);  
-				textlong.setText(""+glong);
-				//Toast.makeText(MainActivity.this, "status is this"+status, Toast.LENGTH_LONG).show();
-				//if(status==""){
-				Toast.makeText(MainActivity.this, "sent to DB~", Toast.LENGTH_SHORT).show();
-				//	}
-			}
-        };
-        this.registerReceiver(gpsreceiver, intentFilter);
-		
-	}
 
 	//establishes options like the configuration that we have
 	@Override
@@ -76,9 +57,9 @@ public class MainActivity extends Activity {
    public boolean onOptionsItemSelected(MenuItem item){
 	   switch(item.getItemId()){
 	   		case R.id.configureMenu:
-	   			Log.d(TAG,"Config menu click");
+		   		Log.d(TAG,"Config menu click");
 	   			Intent intent = new Intent(MainActivity.this,ConfigActivity.class);
-	   			//switches the activity
+	   			//switches activity to configuration
 				startActivityForResult(intent,42);
 	   			return true;
 	   		default:
@@ -87,25 +68,18 @@ public class MainActivity extends Activity {
    }
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.d(TAG, "onActivityResult");
-		Log.d(TAG, "requestCode is"+requestCode);
-		Log.d(TAG, "resultCode is"+resultCode);
-		if(resultCode == Activity.RESULT_CANCELED){
-			Intent intent = getIntent();
-			driftername = intent.getStringExtra("spinnerval");
-			interval_val = intent.getIntExtra("interval_num", 5000);
-			Log.d(TAG, "data is "+driftername);
-		}else{
-			switch(requestCode){
-				case 42:
-					//bind correct name
-					driftername = data.getStringExtra("spinnerval");
-					interval_val = data.getIntExtra("interval_num",5000);
-					TextView displayname = (TextView)findViewById(R.id.driftnametext);
-					displayname.setText(""+driftername);    			
-				}			
+		Log.d(TAG, "onActivityResult with requestCode="+requestCode+" And resultCode is"+resultCode);
+		if(requestCode == 42){
+			if(resultCode == Activity.RESULT_OK){
+				Log.d(TAG, "Update fields");
+				driftername = data.getStringExtra("spinnerval");
+				interval_val = data.getIntExtra("interval_num",5000);
+				displayname.setText(driftername.toString()); 
+			}
+			else if(resultCode == Activity.RESULT_CANCELED){
+				Log.d(TAG, "Cancle was clicked so don't update anything");
+			}
 		}
 	}
 
@@ -116,22 +90,26 @@ public class MainActivity extends Activity {
     //helper functions to set up cancel button
     private void setupEndService(){
     	Button messageButton = (Button)findViewById(R.id.messageButton);
-    	messageButton.setBackgroundResource(R.drawable.stop);
+    	messageButton.setBackgroundResource(R.drawable.stop);//sets the picture to X
     	messageButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 	   			Log.d(TAG,"ended service");
-				//Toast.makeText(MainActivity.this, "Turning off GPS!", Toast.LENGTH_SHORT).show();
-	   			//do a try catch to prevent the crash
+	   			//call stop on the service
    				stopService(new Intent(getBaseContext(),GeoService.class));
-				unregisterReceiver(gpsreceiver);
-	   			
+   				try{
+   					//we put this under a try catch in case the user
+   					//click cancel more than once
+   					unregisterReceiver(gpsreceiver);
+   				}
+   				catch(Exception e){
+   					Log.d(TAG, "already removed");
+   				}
 			}
 		});
     }
-    //part 2 button
+    //set up start button
     private void setupService(){
     	Button messageButton = (Button)findViewById(R.id.configbutton);
     	messageButton.setBackgroundResource(R.drawable.start);
@@ -139,16 +117,42 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 	   			Log.d(TAG,"started service");
-				//Toast.makeText(MainActivity.this, "starting GPS!", Toast.LENGTH_SHORT).show();
-				//startActivity(new Intent(MainActivity.this,ConfigActivity.class));
 				Intent intent = new Intent(getBaseContext(),GeoService.class);
-				intent.putExtra("dname", driftername);
-				Toast.makeText(MainActivity.this, "this is interval"+interval_val, Toast.LENGTH_SHORT).show();
-				intent.putExtra("interval", interval_val);
-	   			startService(intent);
+				if(driftername==null){
+					Toast.makeText(MainActivity.this, "please set the name in the configurations", Toast.LENGTH_SHORT).show();
+				}else if(interval_val == null){
+					Toast.makeText(MainActivity.this, "please set the interval in the configurations", Toast.LENGTH_SHORT).show();
+				}
+				else{
+					//once this has been set in config, send this values to the GeoService
+					intent.putExtra("dname", driftername);
+					intent.putExtra("interval", interval_val);
+		   			startService(intent);
+				}
 			}
 		});
     }
+    
+    
+    private void setupRecieveVal() {
+		Log.d(TAG,"Registering GPS data on main screen");
+		IntentFilter intentFilter = new IntentFilter("gpsdata");
+        gpsreceiver = new BroadcastReceiver(){
+			@Override
+			public void onReceive(Context context, Intent intent) {
+	   			Log.d(TAG,"Recieiving values from GeoService");
+	   			//grab the values of the current location and set them to the view
+				Double glong = intent.getDoubleExtra("lat", 0);
+				Double lat = intent.getDoubleExtra("long", 0);
+				textlat.setText(Double.toString(lat));  
+				textlong.setText(Double.toString(glong));
+				//this is just a handy UI to show it changed
+				//This can be removed
+				Toast.makeText(MainActivity.this, "GPS recorded to DB", Toast.LENGTH_SHORT).show();
+			}
+        };
+        this.registerReceiver(gpsreceiver, intentFilter);
+		
+	}
 }

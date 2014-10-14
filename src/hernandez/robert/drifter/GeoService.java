@@ -22,149 +22,261 @@ import org.apache.http.util.EntityUtils;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Camera;
+import android.location.GpsStatus.Listener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.pm.PackageManager;
+import android.hardware.Camera.CameraInfo;
+
+
 
 public class GeoService extends Service {
 	private static final String TAG = "GeoService";
-	//Setting up Location service
-	private LocationManager lm = null;
-	private static final int LOCATION_INTERVAL = 5000; //Default time
-	private static final float LOCATION_DISTANCE = 0;  //TODO: 20f; what default should this be?
-	String driftername;
-	Integer interval;
-	LocationListener[] mLocationListeners;
-	
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		Toast.makeText(this, "service ended", Toast.LENGTH_SHORT).show();
-	}
+	//the one that request the GPS request
+	private LocationManager lm; 
+	//the one that grabs the GPS requests
+	private myLocationListener loclisten; 
+	//Default time as request by Drifter project
+	private static final int LOCATION_INTERVAL = 5000; 
+	//TODO: 20f; Requested 0, but maybe so distance would be good
+	private static final float LOCATION_DISTANCE = 0;  
+	private String driftername;
+	private Integer interval;
+	//if we need to use both network and GPS, provided an array
+	//to test both connections
+	private LocationListener[] mLocationListeners;
+	private Camera camera;
+	private int cameraId = 0;
+	//needed for Broadcast
+	private GeoService context;
 	
 	@Override
 	public void onCreate()
 	{
-	    Log.d(TAG, "onCreate");
-	    setupLocManager();
+	    Log.d(TAG, "onCreate GeoService");
+	    lm = null;
+	    loclisten=null;
+	    this.context=this;
 	}
 	
-	private void gpadata(int interval){
-		try {
-	        lm.requestLocationUpdates(
-	                LocationManager.NETWORK_PROVIDER, interval, LOCATION_DISTANCE,
-	                mLocationListeners[0]);
-	    } catch (java.lang.SecurityException ex) {
-	        Log.i(TAG, "fail to request location update, ignore", ex);
-	    } catch (IllegalArgumentException ex) {
-	        Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-	    }
-	    try {
-	        lm.requestLocationUpdates(
-	                LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-	                mLocationListeners[1]);
-	    } catch (java.lang.SecurityException ex) {
-	        Log.i(TAG, "fail to request location update, ignore", ex);
-	    } catch (IllegalArgumentException ex) {
-	        Log.d(TAG, "gps provider does not exist " + ex.getMessage());
-	    }
+	@Override
+	public void onDestroy() {
+	    Log.d(TAG, "onDestroy GeoService");
+		super.onDestroy();
+		try{
+			lm.removeUpdates(loclisten);//tells location manager to stop requests
+			lm=null;//prevents any further calls
+		}catch(Exception e){
+			Log.d(TAG,"onDestroy GeoService failed");
+		}
+		Toast.makeText(this, "service ended", Toast.LENGTH_SHORT).show();
 	}
-
-	private void setupLocManager() {
-		Log.d(TAG, "initializeLocationManager");
-	    if (lm == null) {
-	        lm = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-	    }		
-	}
+	
+	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		//calls the GPS and the camera to operate
 	    Log.d(TAG, "onStartCommand");
 	    driftername = intent.getStringExtra("dname");
 	    interval = intent.getIntExtra("interval", LOCATION_INTERVAL);
-	    this.mLocationListeners = new LocationListener[] {
-		        new myLocationListener(LocationManager.GPS_PROVIDER,this,driftername),
-		        new myLocationListener(LocationManager.NETWORK_PROVIDER,this,driftername)
-		};
+	    Log.d(TAG, "The driftername selected is "+driftername+"and the interval set is "+interval);
+	    setupLocManager();
 	    gpadata(interval);
-	    Toast.makeText(this, "service initiated"+driftername+"interval is"+interval, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "The interval is set at:"+interval+"for Drifter:"+driftername, Toast.LENGTH_SHORT).show();
+	    /*
+	     * If we are including a aysnch camera, call it here.
+	     * Removed for now-Robert
+	     */
 		return START_STICKY;
 	}
-
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+   //**********non built in functions**********
+
+	
+	private void setupLocManager() {
+		//Sets the location manager with the driftername and binds it to the GSP provider(or network if we select it)
+		//TODO: we can make this optional with a parameter if we so choose to do so
+		Log.d(TAG, "in setupLocManager");
+	    if (lm == null) {
+	        lm = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+	    }
+	    this.loclisten =  new myLocationListener(LocationManager.GPS_PROVIDER,context,driftername);
+	    //TODO:The following line can be added to the array above to also include network besides GPS
+	    /**Removed right now because we are testing on land
+	     * 
+	     * myLocationLister network = new myLocationListener(LocationManager.NETWORK_PROVIDER,this, driftername) 
+	     * 
+	     * //sets up the array variable
+	    	this.mLocationListeners = new LocationListener[] {
+		        this.loclisten, network
+			};
+	     * 
+	     */
+	}
+	
+	private void gpadata(int interval){
+		//Sets the interval for the provided LocationManager
+		//AKA this method sets the request and how frequent to make these requests
+	    Log.d(TAG, "in gpadata");
+		try {
+			//TODO: instead of loclisten, you would use mLocationListener[0] and 1 for the second
+	        lm.requestLocationUpdates(
+	                LocationManager.GPS_PROVIDER, interval, LOCATION_DISTANCE,
+	                loclisten);
+		    Log.d(TAG, "gpadata gps has been selected");
+	    } catch (java.lang.SecurityException ex) {
+	        Log.d(TAG, "fail to request location update, ignore", ex);
+	    } catch (IllegalArgumentException ex) {
+	        Log.d(TAG, "gps provider does not exist " + ex.getMessage());
+	    }
+	}
+	/* Deprecated until we test in the water. GPS is sufficent on land
+	private void networkGPS(){
+		try {
+			loclisten = (myLocationListener) mLocationListeners[1];
+	        lm.requestLocationUpdates(
+	                LocationManager.NETWORK_PROVIDER, interval, LOCATION_DISTANCE,
+	                loclisten);
+		    Log.d(TAG, "gpadata network");
+	    } catch (java.lang.SecurityException ex) {
+	        Log.d(TAG, "fail to request location update, ignore", ex);
+	    } catch (IllegalArgumentException ex) {
+	        Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+	    } 
+		
+	}
+	*/
+
+	/* For the time being, we are blocking camera until we can 
+	 * A) get it succesfully working or 
+	 * B) get a special camera censor
+	private void startCamera() {
+	    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+	      Toast.makeText(this, "No camera on this device", Toast.LENGTH_LONG)
+	          .show();
+	    } else {
+	      cameraId = findBackFacingCamera();
+	      if (cameraId < 0) {
+	        Toast.makeText(this, "No front facing camera found.",
+	            Toast.LENGTH_LONG).show();
+	      } else {
+	        camera = Camera.open(cameraId);
+	    	Log.d(TAG, "camera open");
+	        Toast.makeText(this, "front facing camera found.",
+		            Toast.LENGTH_LONG).show();
+	        //maybe pass the camera inside to take the photo?
+	      }
+	    }
+	}
+	
+	private void asynchPhoto(){
+		Log.d(TAG,"aychphoto");
+		boolean safeToTakePicture = false;
+		camera.startPreview();
+		safeToTakePicture = true;
+        if (safeToTakePicture) {
+        	PhotoHandler handle = new PhotoHandler(context);
+        	Log.d(TAG,"taking photo");
+        	 try {
+        		    SurfaceView mview = new SurfaceView(context);
+        	        camera.setPreviewDisplay(mview.getHolder());
+        	        camera.startPreview();
+		        	Log.d(TAG,"take photo method");
+        	        camera.takePicture(null,null,handle);
+        	    } catch (IOException e) {
+        	        // TODO Auto-generated catch block
+        	        e.printStackTrace();
+        	    }
+        }
+		// new CountDownTimer(5000,1000){
+
+		//     @Override
+		//     public void onFinish() {
+
+		//     }
+
+		//     @Override
+		//     public void onTick(long millisUntilFinished) {
+		//     }
+
+		// }.start();
+	}
+	
+	private int findBackFacingCamera() {
+	    int cameraId = -1;
+	    // Search for the front facing camera
+	    int numberOfCameras = Camera.getNumberOfCameras();
+	    for (int i = 0; i < numberOfCameras; i++) {
+	      CameraInfo info = new CameraInfo();
+	      Camera.getCameraInfo(i, info);
+	      if (info.facing == CameraInfo.CAMERA_FACING_BACK) {
+	        Log.d(TAG, "Camera found");
+	        cameraId = i;
+	        break;
+	      }
+	    }
+	    return cameraId;
+	  }
+	  */
+
+//End of GeoService	
 }
- class Connection extends AsyncTask<ArrayList<NameValuePair>, Void, Void>{
 
-    protected Void doInBackground(ArrayList<NameValuePair>... nameValuePairs){
-        // get zero index of nameValuePairs and use that to post
-        ArrayList<NameValuePair> nvPairs = nameValuePairs[0];
-
-        try{
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://drifter-visualization.herokuapp.com/data");
-            httppost.setEntity(new UrlEncodedFormEntity(nvPairs));
-
-         // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-            Log.d("postData", nameValuePairs[0].toString());
-
-            Log.i("postData", response.getStatusLine().toString());
-        } catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        finally{}
-		return null;
-
-    }
-
-}
-
-	class myLocationListener implements LocationListener{
+class myLocationListener implements LocationListener{
+		//Modified LocationListener so that we can do aditional functions
 		private static final String TAG = "myListenerInGeoService";
 		Location lastloc;
-		
-		Context context; // so that we can broadcast
-		String Driftername;//name of drifter
+		// so that we can broadcast
+		Context context; 
+		//name of drifter
+		String drifterName;
 
 	    public myLocationListener(String provider, Context context, String driftname){
-	        Log.d(TAG, "LocationListener " + provider);
+	        Log.d(TAG, "LocationListener provider is:" + provider+"for drifter"+driftname);
+	        //sets default to 0
 	        lastloc = new Location(provider);
 			this.context=context;
-			this.Driftername=driftname;
-
+			this.drifterName=driftname;
 	    }
+	    
+	    private void sendDataToMain(double pLat, double pLong,Context con){
+	    	Log.d(TAG,"in sendingdatato Main");
+	    	Intent intent= new Intent("gpsdata");
+            intent.putExtra("lat", pLat);
+            intent.putExtra("long", pLong);
+            con.sendBroadcast(intent);//updates the phone
+	    }
+	      
 		@Override
+		//The heart of this app, the changing of GPS, and sending of data
+		//Todo:before we set this, we can do something with the previous 
+		//data if we so choose to do so
 		public void onLocationChanged(Location location) {
-			Log.d(TAG, "onLocationChanged: " + location);
+			Log.d(TAG, "onLocationChanged for loc: "+ location);
 			lastloc.set(location);
 			if(lastloc != null){
 				double pLong = lastloc.getLongitude();
 				double pLat = lastloc.getLatitude();
-				//String latLongString = "Lat:" + location.getLatitude() + "\nLong:" + location.getLongitude();
-	            Intent intent= new Intent("gpsdata");
-	            intent.putExtra("lat", pLat);//putIntegerArrayListExtra("lat", (ArrayList<Integer>) lat);
-	            intent.putExtra("long", pLong);//putIntegerArrayListExtra("lon", (ArrayList<Integer>) lon);
-	            String status = postData(location);
-	            intent.putExtra("status",status);
-	            context.sendBroadcast(intent); 
+				//the broadcaster established to be seen on MainActivity
+				sendDataToMain(pLong,pLat,context);
+				//sends the data to the server
+	            postData(location);
 			}
 			
 		}
@@ -180,46 +292,63 @@ public class GeoService extends Service {
 
 		@Override
 		public void onProviderDisabled(String provider) {
-	        Log.d(TAG, "onProviderDisabled: " + provider);            		
+	        Log.d(TAG, "onProviderDisabled: " + provider); 
+	        Log.d(TAG, "driftername is"+this.drifterName);
 		}
-		//adding the post data to Ruby
+		
+		//adding the post data to Visualizer
 		public String postData(Location loc) {
 		    // Create a new HttpClient and Post Header
-		    //HttpClient httpclient = new DefaultHttpClient();
-		    //HttpPost httppost = new HttpPost("http://0.0.0.0:3000/data");
+			//TODO: the string can be formed for whatever you would like to check under the hood
 		    String status="";
 		    try {
-		        // Add your data
+		        // Add your data here
+		    	//Todo:we can make this dynamic with conditions
+		        Log.d(TAG, "Time is : " + loc.getTime());            		
 		    	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(6);
 		        nameValuePairs.add(new BasicNameValuePair("latitude", loc.getLatitude()+""));
-		        //status += " lat= "+lat.toString();
 		        nameValuePairs.add(new BasicNameValuePair("longitude", loc.getLongitude()+""));
-		        //status += " long= "+lon.toString();
-		        Time now = new Time();
-		        now.setToNow();
-		        now.format2445();
-		        String time = now.toString();
-		        //status += " time= "+time;
-		        System.out.println(time);
-		        nameValuePairs.add(new BasicNameValuePair("time", time));
+		        nameValuePairs.add(new BasicNameValuePair("time", loc.getTime()+""));
 		        nameValuePairs.add(new BasicNameValuePair("valid_input", "true"));
-		        //status += " valid= "+ true;
-		        nameValuePairs.add(new BasicNameValuePair("drifter_name", this.Driftername));
-		        status += " name= "+ this.Driftername;
+		        nameValuePairs.add(new BasicNameValuePair("drifter_name", this.drifterName));
 		        nameValuePairs.add(new BasicNameValuePair("gps_speed", loc.getSpeed()+""));
-		        status += " speed= "+ loc.getSpeed()+" ";
-		        //httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		        // Execute HTTP Post Request
-		        //status += "and before http post";
-		        //HttpResponse response = httpclient.execute(httppost);
-		        new Connection().doInBackground(nameValuePairs);
+		        Void doInBackground = new Connection().doInBackground(nameValuePairs);
 		       	status += "post sent!";
 		    }finally{}
-		        
-
-		  
-		    
+		            
 		    return status;
 		} 
 		
-	}
+	}	
+	
+class Connection extends AsyncTask<ArrayList<NameValuePair>, Void, Void>{
+			//this class connects to Rails to send the json data
+
+		    protected Void doInBackground(ArrayList<NameValuePair>... nameValuePairs){
+		        // get zero index of nameValuePairs and use that to post
+		        ArrayList<NameValuePair> nvPairs = nameValuePairs[0];
+		        try{
+		            HttpClient httpclient = new DefaultHttpClient();
+		            //where I mapped the create for the data being sent over
+		            HttpPost httppost = new HttpPost("http://drifter-visualization.herokuapp.com/data");
+		            httppost.setEntity(new UrlEncodedFormEntity(nvPairs));
+		            // Execute HTTP Post Request
+		            HttpResponse response = httpclient.execute(httppost);
+		            Log.d("postData", "the values sent"+nameValuePairs[0].toString());
+		            Log.d("postData", "the response given"+response.getStatusLine().toString());
+		        } catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        finally{}
+				return null;
+		    }
+
+		}
