@@ -60,7 +60,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="42dp"
         android:layout_marginLeft="20dp"
-        android:textColor="#336699"
         android:textSize="20sp" />
 
     <Button
@@ -71,7 +70,26 @@
         android:layout_alignBottom="@+id/btnOnConfig"
         android:layout_alignRight="@+id/spinnerDrifter"
         android:layout_marginRight="17dp"
-        android:textColor="#336699"
         android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/Bluetooth_id"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignRight="@+id/spinnerDrifter"
+        android:layout_below="@+id/inputfor_interval"
+        android:layout_marginTop="26dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/Bluetooth_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Bluetooth_id"
+        android:layout_alignBottom="@+id/Bluetooth_id"
+        android:layout_alignLeft="@+id/inputfor_interval"
+        android:text="@string/Bluetooth_button"
+        android:textColor="#336699"
+        android:textSize="22sp" />
 
 </RelativeLayout>

@@ -68,6 +68,8 @@ public class GeoService extends Service {
 	    lm = null;
 	    loclisten=null;
 	    this.context=this;
+
+
 	}
 	
 	@Override
@@ -146,7 +148,10 @@ public class GeoService extends Service {
 	        Log.d(TAG, "gps provider does not exist " + ex.getMessage());
 	    }
 	}
-	/* Deprecated until we test in the water. GPS is sufficent on land
+	/* ----------
+	 * The following is commented out as it is temporary disabled.
+	 * 
+	 * Deprecated until we test in the water. GPS is sufficient on land
 	private void networkGPS(){
 		try {
 			loclisten = (myLocationListener) mLocationListeners[1];
@@ -164,7 +169,7 @@ public class GeoService extends Service {
 	*/
 
 	/* For the time being, we are blocking camera until we can 
-	 * A) get it succesfully working or 
+	 * A) get it successfully working or 
 	 * B) get a special camera censor
 	private void startCamera() {
 	    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
@@ -233,8 +238,8 @@ public class GeoService extends Service {
 	    }
 	    return cameraId;
 	  }
+	  *----------
 	  */
-
 //End of GeoService	
 }
 
@@ -246,6 +251,7 @@ class myLocationListener implements LocationListener{
 		Context context; 
 		//name of drifter
 		String drifterName;
+		DBHelper mydb;
 
 	    public myLocationListener(String provider, Context context, String driftname){
 	        Log.d(TAG, "LocationListener provider is:" + provider+"for drifter"+driftname);
@@ -253,6 +259,9 @@ class myLocationListener implements LocationListener{
 	        lastloc = new Location(provider);
 			this.context=context;
 			this.drifterName=driftname;
+			//constructs the db only once, after that you have full access using mydb
+		    this.mydb = new DBHelper(context);
+
 	    }
 	    
 	    private void sendDataToMain(double pLat, double pLong,Context con){
@@ -303,15 +312,25 @@ class myLocationListener implements LocationListener{
 		    String status="";
 		    try {
 		        // Add your data here
-		    	//Todo:we can make this dynamic with conditions
-		        Log.d(TAG, "Time is : " + loc.getTime());            		
+		        Log.d(TAG,"adding data for JSON");
+		        String lat = Double.toString(loc.getLatitude());
+		        String glong = Double.toString(loc.getLongitude());
+		        String time = Double.toString(loc.getTime());
+		        String valid = "true";
+		        String speed = Double.toString(loc.getSpeed());
+		        Log.d(TAG,"Saving to SQLite");
+		        boolean backup = this.mydb.insertData(lat, glong, time, valid, this.drifterName, speed);
+		        if(backup){
+		        	Log.d(TAG, "backup was successful");
+		        }
+		        Log.d(TAG, "constructing the JSON");
 		    	ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(6);
-		        nameValuePairs.add(new BasicNameValuePair("latitude", loc.getLatitude()+""));
-		        nameValuePairs.add(new BasicNameValuePair("longitude", loc.getLongitude()+""));
-		        nameValuePairs.add(new BasicNameValuePair("time", loc.getTime()+""));
-		        nameValuePairs.add(new BasicNameValuePair("valid_input", "true"));
+		        nameValuePairs.add(new BasicNameValuePair("latitude", lat));
+		        nameValuePairs.add(new BasicNameValuePair("longitude", glong));
+		        nameValuePairs.add(new BasicNameValuePair("time", time));
+		        nameValuePairs.add(new BasicNameValuePair("valid_input", valid));
 		        nameValuePairs.add(new BasicNameValuePair("drifter_name", this.drifterName));
-		        nameValuePairs.add(new BasicNameValuePair("gps_speed", loc.getSpeed()+""));
+		        nameValuePairs.add(new BasicNameValuePair("gps_speed", speed));
 		        // Execute HTTP Post Request
 		        Void doInBackground = new Connection().doInBackground(nameValuePairs);
 		       	status += "post sent!";

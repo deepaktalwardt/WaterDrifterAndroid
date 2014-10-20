@@ -37,5 +37,6 @@
     <string name="textfor_driftname">Welcome          </string>
     <string name="textfor_driftname2">The Water Drifter Project,</string>
     <string name="textfor_driftname3">I am</string>
+    <string name="Bluetooth_button">Tap to add Bluetooth</string>
 
 </resources>

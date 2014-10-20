@@ -15,6 +15,7 @@ public class ConfigActivity extends Activity {
 	Spinner configSpinner;//variable that holds choices(choices stored in strings-inside values-)
 	Button cancelbtn;//a simple redirect button
 	Button configbtn;//a button that passes values depending on its configuration
+	Button wifi_btn;//a window to allow the bluetooth config
 	EditText inputval;//text to input the interval
 	
 	@Override//all the work happens in onCreate, sets up the activity
@@ -24,8 +25,11 @@ public class ConfigActivity extends Activity {
 		setupSpinnVal();
 		setupCancelButton();
 		setupConfigButton();
+		setupBluetoothBtn();
 	}
 	
+	
+
 	//**********non built in functions**********
 
 	
@@ -33,6 +37,22 @@ public class ConfigActivity extends Activity {
 	private void setupSpinnVal() {
 		configSpinner = (Spinner)findViewById(R.id.spinnerDrifter);
 		inputval = (EditText)findViewById(R.id.inputfor_interval);//presented to 5000
+	}
+	
+	//setup Bluetooth new feature
+	private void setupBluetoothBtn() {
+		// TODO Auto-generated method stub
+		wifi_btn = (Button)findViewById(R.id.Bluetooth_id);
+		wifi_btn.setBackgroundResource(R.drawable.stat_sys_data_bluetooth);
+		wifi_btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG,"bluetooth clicked");
+				Intent intent = new Intent(getBaseContext(),BluetoothSetup.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	//a helper function to set configuration to send values over to Main
