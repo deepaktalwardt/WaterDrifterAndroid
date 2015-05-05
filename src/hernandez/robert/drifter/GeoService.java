@@ -350,7 +350,7 @@ class Connection extends AsyncTask<ArrayList<NameValuePair>, Void, Void>{
 		        try{
 		            HttpClient httpclient = new DefaultHttpClient();
 		            //where I mapped the create for the data being sent over
-		            HttpPost httppost = new HttpPost("http://drifter-visualization.herokuapp.com/data");
+		            HttpPost httppost = new HttpPost("http://driftersensor.herokuapp.com/data");
 		            httppost.setEntity(new UrlEncodedFormEntity(nvPairs));
 		            // Execute HTTP Post Request
 		            HttpResponse response = httpclient.execute(httppost);
