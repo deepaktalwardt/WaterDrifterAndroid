@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
     private TextView textlat;
     private TextView textlong;
     private TextView displayname;
+    private Boolean toggle_start_button;
 
 
 	
@@ -34,11 +35,11 @@ public class MainActivity extends Activity {
         textlat = (TextView)findViewById(R.id.lattext);
 		textlong = (TextView)findViewById(R.id.longtext);
 		displayname = (TextView)findViewById(R.id.driftnametext);
+		toggle_start_button = false;
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        setupEndService();
         setupService();
         setupRecieveVal();
 		Log.d(TAG,"Main activity finish creating");
@@ -87,48 +88,44 @@ public class MainActivity extends Activity {
    //**********non built in functions**********
    
    
-    //helper functions to set up cancel button
-    private void setupEndService(){
-    	Button messageButton = (Button)findViewById(R.id.messageButton);
-    	messageButton.setBackgroundResource(R.drawable.stop);//sets the picture to X
-    	messageButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-	   			Log.d(TAG,"ended service");
-	   			//call stop on the service
-   				stopService(new Intent(getBaseContext(),GeoService.class));
-   				try{
-   					//we put this under a try catch in case the user
-   					//click cancel more than once
-   					unregisterReceiver(gpsreceiver);
-   				}
-   				catch(Exception e){
-   					Log.d(TAG, "already removed");
-   				}
-			}
-		});
-    }
     //set up start button
     private void setupService(){
-    	Button messageButton = (Button)findViewById(R.id.configbutton);
+    	final Button messageButton = (Button)findViewById(R.id.configbutton);
     	messageButton.setBackgroundResource(R.drawable.start);
     	messageButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-	   			Log.d(TAG,"started service");
-				Intent intent = new Intent(getBaseContext(),GeoService.class);
-				if(driftername==null){
-					Toast.makeText(MainActivity.this, "please set the name in the configurations", Toast.LENGTH_SHORT).show();
-				}else if(interval_val == null){
-					Toast.makeText(MainActivity.this, "please set the interval in the configurations", Toast.LENGTH_SHORT).show();
-				}
-				else{
-					//once this has been set in config, send this values to the GeoService
-					intent.putExtra("dname", driftername);
-					intent.putExtra("interval", interval_val);
-		   			startService(intent);
+				if(!toggle_start_button){
+		   			Log.d(TAG,"started service");
+					Intent intent = new Intent(getBaseContext(),GeoService.class);
+					if(driftername==null){
+						Toast.makeText(MainActivity.this, "please set the name in the configurations", Toast.LENGTH_SHORT).show();
+					}else if(interval_val == null){
+						Toast.makeText(MainActivity.this, "please set the interval in the configurations", Toast.LENGTH_SHORT).show();
+					}
+					else{
+						//once this has been set in config, send this values to the GeoService
+						intent.putExtra("dname", driftername);
+						intent.putExtra("interval", interval_val);
+						messageButton.setBackgroundResource(R.drawable.stop);
+			   	    	toggle_start_button = true;
+			   			startService(intent);
+					}
+				}else{
+		   			Log.d(TAG,"ended service");
+		   			//call stop on the service
+	   				stopService(new Intent(getBaseContext(),GeoService.class));
+	   				try{
+	   					//we put this under a try catch in case the user
+	   					//click cancel more than once
+	   					unregisterReceiver(gpsreceiver);
+	   				}
+	   				catch(Exception e){
+	   					Log.d(TAG, "already removed");
+	   				}
+	   				messageButton.setBackgroundResource(R.drawable.start);
+	   				toggle_start_button = false;
 				}
 			}
 		});

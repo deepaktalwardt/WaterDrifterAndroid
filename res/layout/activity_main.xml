@@ -5,64 +5,86 @@
     tools:context="${packageName}.${activityClass}"
     android:background="#BBD9EE" >
 
-    <Button
-        android:id="@+id/messageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="31dp"
-        android:layout_marginRight="44dp"
-        />
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="500dp"
+        android:layout_height="110dp"
+        android:layout_below="@+id/I_am_id"
+        android:layout_marginTop="14dp"
+        android:contentDescription="Main Photo for Drifter"
+        android:src="@drawable/drifter" />
 
     <Button
         android:id="@+id/configbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/messageButton"
-        android:layout_alignBottom="@+id/messageButton"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="42dp"
-         />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp" />
 
     <TextView
-        android:id="@+id/TextView01"
+        android:id="@+id/Welcome_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/messageButton"
+        android:layout_alignRight="@+id/configbutton"
         android:text="@string/textfor_driftname"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#ffffff"
         android:textSize="26sp" />
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="500dp"
-        android:layout_height="110dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/TextView02"
-        android:layout_marginTop="14dp"
-        android:contentDescription="Main Photo for Drifter"
-        android:src="@drawable/drifter" />
-
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/I_am_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/driftnametext"
+        android:layout_alignBottom="@+id/driftnametext"
+        android:layout_toLeftOf="@+id/Welcome_id"
+        android:text="@string/textfor_driftname3"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffff"
+        android:textSize="26sp" />
+
+    <TextView
+        android:id="@+id/driftnametext"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
         android:layout_alignLeft="@+id/configbutton"
+        android:layout_below="@+id/Welcome_id"
+        android:layout_marginLeft="20dp"
+        android:text="@string/Drifttextname"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#ffffff"
+        android:textSize="26sp" />
+
+    <TextView
+        android:id="@+id/lattext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/long_name_id"
+        android:layout_marginTop="31dp"
+        android:layout_toRightOf="@+id/configbutton"
+        android:text="longitude"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:id="@+id/long_name_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="Latitude:"
+        android:layout_toRightOf="@+id/configbutton"
+        android:text="Longitude:"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#ffffff" />
 
     <TextView
-        android:id="@+id/Bluetooth_name"
+        android:id="@+id/lat_name_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/messageButton"
-        android:layout_centerVertical="true"
-        android:text="Longitude:"
+        android:layout_above="@+id/lattext"
+        android:layout_alignLeft="@+id/I_am_id"
+        android:text="Latitude:"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#ffffff" />
 
@@ -70,44 +92,11 @@
         android:id="@+id/longtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="30dp"
+        android:layout_alignBaseline="@+id/lattext"
+        android:layout_alignBottom="@+id/lattext"
+        android:layout_toLeftOf="@+id/Welcome_id"
         android:text="latitude"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#ffffff" />
-
-    <TextView
-        android:id="@+id/lattext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/longtext"
-        android:layout_alignBottom="@+id/longtext"
-        android:layout_toRightOf="@+id/TextView01"
-        android:text="longitude"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#ffffff" />
-
-    <TextView
-        android:id="@+id/driftnametext"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_above="@+id/imageView1"
-        android:layout_alignRight="@+id/lattext"
-        android:text="@string/Drifttextname"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#ffffff"
-        android:textSize="26sp" />
-
-    <TextView
-        android:id="@+id/TextView02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/configbutton"
-        android:layout_below="@+id/TextView01"
-        android:text="@string/textfor_driftname3"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ffffff"
-        android:textSize="26sp" />
 
 </RelativeLayout>
